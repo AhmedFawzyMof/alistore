@@ -6,6 +6,7 @@ export const users = sqliteTable("users", {
   password: text("password").notNull(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
+  phone: text("phone").notNull(),
   roleId: integer("role_id")
     .notNull()
     .references(() => roles.roleId),
@@ -75,4 +76,22 @@ export const productSizes = sqliteTable("product_sizes", {
   sizeId: integer("size_id")
     .notNull()
     .references(() => sizes.sizeId),
+});
+
+export const orders = sqliteTable("orders", {
+  orderId: integer("order_id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.userId),
+  productId: integer("product_id")
+    .notNull()
+    .references(() => products.productId),
+  quantity: integer("quantity").notNull(),
+  address: text("address").notNull(),
+  apartment: text("apartment").notNull(),
+  city: text("city").notNull(),
+  totalPrice: real("total_price").notNull(),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
 });
