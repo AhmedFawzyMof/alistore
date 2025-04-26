@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface ProductCardProps {
-  id: string;
+  id: number;
   name: string;
   price: number;
-  image: string;
+  image: string | null;
   category: string;
 }
 
@@ -45,10 +45,10 @@ export function ProductCard({
         </Link>
         <div className="mt-1 flex items-center justify-between">
           <p className="text-sm text-gray-500">{category}</p>
-          <p className="font-medium text-gray-900">${price.toFixed(2)}</p>
+          <p className="font-medium text-gray-900">EGP {price.toFixed(2)}</p>
         </div>
         <Button className="mt-4 w-full" size="sm" onClick={addToCart}>
-          Add to Cart
+          أضف إلى السلة
         </Button>
       </div>
     </div>

@@ -18,18 +18,18 @@ export const users = sqliteTable("users", {
 export const roles = sqliteTable("roles", {
   roleId: integer("role_id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull().unique(),
-  description: text("description"),
 });
 
 export const categories = sqliteTable("categories", {
   categoryId: integer("category_id").primaryKey({ autoIncrement: true }),
+  image: text("image").notNull(),
   name: text("name").notNull(),
-  description: text("description"),
 });
 
 export const products = sqliteTable("products", {
   productId: integer("product_id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
+  image: text("image"),
   shortDiscription: text("short_discription"),
   description: text("description"),
   basePrice: real("base_price").notNull(),

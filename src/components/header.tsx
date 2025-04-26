@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import { Menu, Search, ShoppingBag, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,54 +15,53 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="max-w-screen-2xl mx-auto container flex h-16 items-center px-4 md:px-6">
-        {isMobile && (
-          <Button variant="ghost" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <Menu className="h-4 w-4" />
-          </Button>
-        )}
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <span className="font-bold text-xl text-black">Ali Store</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-6 text-sm">
-          <Link
-            href="/"
-            className="font-medium transition-colors hover:text-black"
-          >
-            Home
+    <header
+      dir="rtl"
+      className="sticky top-0 z-50 w-full border-b bg-white shadow-sm"
+    >
+      <div className="max-w-screen-2xl mx-auto container flex h-16 items-center justify-center gap-4 px-4 md:px-6">
+        <div className="flex ml-auto gap-3">
+          {isMobile && (
+            <Button variant="ghost" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <Menu className="h-4 w-4" />
+            </Button>
+          )}
+          <Link href="/" className="flex items-center space-x-2">
+            <span className="font-bold text-xl text-black">Ali Store</span>
           </Link>
-          <Link
-            href="/products"
-            className="font-medium transition-colors hover:text-black"
-          >
-            Shop All
-          </Link>
-          <Link
-            href="/categories"
-            className="font-medium transition-colors hover:text-black"
-          >
-            Categories
-          </Link>
-          <Link
-            href="/about"
-            className="font-medium transition-colors hover:text-black"
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            className="font-medium transition-colors hover:text-black"
-          >
-            Contact
-          </Link>
-        </nav>
-        <div className="ml-auto flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            <Link
+              href="/"
+              className="font-medium transition-colors hover:text-black"
+            >
+              الرئيسية
+            </Link>
+            <Link
+              href="/products"
+              className="font-medium transition-colors hover:text-black"
+            >
+              المتجر
+            </Link>
+            <Link
+              href="/categories"
+              className="font-medium transition-colors hover:text-black"
+            >
+              الأقسام
+            </Link>
+            <Link
+              href="/contact"
+              className="font-medium transition-colors hover:text-black"
+            >
+              اتصل بنا
+            </Link>
+          </nav>
+        </div>
+        <div className="flex items-center gap-2">
           {isSearchOpen && !isMobile ? (
             <div className="relative flex items-center">
               <Input
                 type="search"
-                placeholder="Search..."
+                placeholder="...ابحث هنا"
                 className="w-[200px] md:w-[300px] pr-8 border-gray-200 focus:border-gray-400"
               />
               <Button
@@ -72,7 +71,7 @@ export function Header() {
                 onClick={() => setIsSearchOpen(false)}
               >
                 <X className="h-4 w-4" />
-                <span className="sr-only">Close search</span>
+                <span className="sr-only">إغلاق البحث</span>
               </Button>
             </div>
           ) : (
@@ -84,7 +83,7 @@ export function Header() {
               className="text-gray-600 hover:text-black hover:bg-gray-100"
             >
               <Search className="h-5 w-5" />
-              <span className="sr-only">Search</span>
+              <span className="sr-only">البحث</span>
             </Button>
           )}
           <Link href="/cart">
@@ -95,7 +94,7 @@ export function Header() {
               className="text-gray-600 hover:text-black hover:bg-gray-100"
             >
               <ShoppingBag className="h-5 w-5" />
-              <span className="sr-only">Cart</span>
+              <span className="sr-only">عربة التسوق</span>
             </Button>
           </Link>
         </div>
@@ -104,37 +103,31 @@ export function Header() {
         <nav
           className={`md:hidden ${
             isMenuOpen ? "max-h-60 px-4 py-3" : "max-h-0"
-          } overflow-hidden flex flex-col items-end gap-6 text-sm transition-all duration-300 ease-in-out`}
+          } overflow-hidden flex flex-col items-start gap-6 text-sm transition-all duration-300 ease-in-out`}
         >
           <Link
             href="/"
             className="font-medium transition-colors hover:text-black"
           >
-            Home
+            الرئيسية
           </Link>
           <Link
             href="/products"
             className="font-medium transition-colors hover:text-black"
           >
-            Shop All
+            المتجر{" "}
           </Link>
           <Link
             href="/categories"
             className="font-medium transition-colors hover:text-black"
           >
-            Categories
-          </Link>
-          <Link
-            href="/about"
-            className="font-medium transition-colors hover:text-black"
-          >
-            About
+            الأقسام
           </Link>
           <Link
             href="/contact"
             className="font-medium transition-colors hover:text-black"
           >
-            Contact
+            اتصل بنا
           </Link>
         </nav>
       )}

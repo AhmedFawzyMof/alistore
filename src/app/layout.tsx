@@ -6,13 +6,26 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
+import { Cairo } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const cairo = Cairo({
+  style: "normal",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Ali Store - Premium Clothing Store",
   description:
     "Discover the latest fashion trends and premium clothing for all occasions",
+  keywords: ["Ali Store", "Clothing", "Fashion", "Print(name)", "AhmedMoftah"],
+  authors: [
+    { name: "Ahmed Moftah", url: "https://github.com/AhmedMoftah" },
+    { name: "Mohanad Refaei" },
+    {
+      name: "Print(name)",
+      url: "https://www.tiktok.com/@printnamehq?_t=ZS-8vq3H94ul0s&_r=1",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -21,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="ar" className={cairo.className}>
+      <body>
         <div className="relative flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>
