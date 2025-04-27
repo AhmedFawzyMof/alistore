@@ -13,7 +13,6 @@ import { useCartStore } from "@/stores/cartStores";
 
 export function Header() {
   const isMobile = useMobile();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const cartStore = useCartStore((state) => state);
 
@@ -71,35 +70,6 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          {isSearchOpen && !isMobile ? (
-            <div className="relative flex items-center">
-              <Input
-                type="search"
-                placeholder="...ابحث هنا"
-                className="w-[200px] md:w-[300px] pr-8 border-gray-200 focus:border-gray-400"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 text-gray-500"
-                onClick={() => setIsSearchOpen(false)}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">إغلاق البحث</span>
-              </Button>
-            </div>
-          ) : (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSearchOpen(true)}
-              aria-label="Search"
-              className="text-gray-600 hover:text-black hover:bg-gray-100"
-            >
-              <Search className="h-5 w-5" />
-              <span className="sr-only">البحث</span>
-            </Button>
-          )}
           <Link href="/cart">
             <Button
               variant="ghost"
