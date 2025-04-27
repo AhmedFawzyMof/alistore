@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/libsql";
 
 if (!process.env.TURSO_CONNECTION_URL) {
-  throw new Error("DATABASE_URL is not defined");
+  throw new Error("TURSO_CONNECTION_URL is not defined");
 }
 
 const db = drizzle({
