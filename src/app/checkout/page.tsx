@@ -25,6 +25,7 @@ export default function CheckoutPage() {
   const cartStore = useCartStore((state) => state);
   const [cartItems, setCartItems] = useState(cartStore.cart);
   const [subTotal, setSubTotal] = useState(0);
+  const [tabValue, setTabValue] = useState("details");
 
   useEffect(() => {
     setCartItems(cartStore.cart);
@@ -57,35 +58,45 @@ export default function CheckoutPage() {
         العودة إلى سلة التسوق
       </Link>
 
-      <h1 className="text-3xl font-bold tracking-tight mb-8">Checkout</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-8">الدفع</h1>
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <Tabs defaultValue="details" className="w-full">
+          <Tabs defaultValue="details" value={tabValue} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="shipping">Shipping</TabsTrigger>
+              <TabsTrigger
+                value="details"
+                onClick={() => setTabValue("details")}
+              >
+                تفاصيل
+              </TabsTrigger>
+              <TabsTrigger
+                value="shipping"
+                onClick={() => setTabValue("shipping")}
+              >
+                الشحن
+              </TabsTrigger>
             </TabsList>
-            <TabsContent value="details" className="space-y-6 pt-6">
+            <TabsContent dir="rtl" value="details" className="space-y-6 pt-6">
               <div className="space-y-2">
-                <h2 className="text-xl font-semibold">Personal Information</h2>
+                <h2 className="text-xl font-semibold">معلومات شخصية</h2>
                 <p className="text-sm text-muted-foreground">
-                  Please enter your personal details to complete your order.
+                  يرجى إدخال بياناتك الشخصية لإكمال طلبك.
                 </p>
               </div>
               <form className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="first-name">First Name</Label>
+                    <Label htmlFor="first-name">الاسم الأول</Label>
                     <Input id="first-name" placeholder="John" required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="last-name">Last Name</Label>
+                    <Label htmlFor="last-name">اسم العائلة</Label>
                     <Input id="last-name" placeholder="Doe" required />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">بريد إلكتروني</Label>
                   <Input
                     id="email"
                     type="email"
@@ -94,7 +105,7 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">رقم التليفون</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -102,67 +113,36 @@ export default function CheckoutPage() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full">
-                  Continue to Shipping
+                <Button
+                  type="submit"
+                  onClick={() => setTabValue("shipping")}
+                  className="w-full"
+                >
+                  متابعة الشحن
                 </Button>
               </form>
             </TabsContent>
-            <TabsContent value="shipping" className="space-y-6 pt-6">
+            <TabsContent dir="rtl" value="shipping" className="space-y-6 pt-6">
               <div className="space-y-2">
-                <h2 className="text-xl font-semibold">Shipping Address</h2>
+                <h2 className="text-xl font-semibold">عنوان الشحن</h2>
                 <p className="text-sm text-muted-foreground">
-                  Please enter your shipping address where you want your order
-                  to be delivered.
+                  الرجاء إدخال عنوان الشحن الذي تريد تسليم طلبك إليه.
                 </p>
               </div>
               <form className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="address">Street Address</Label>
+                  <Label htmlFor="address">عنوان الشارع</Label>
                   <Input id="address" placeholder="123 Main St" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="address2">
-                    Apartment, suite, etc. (optional)
-                  </Label>
+                  <Label htmlFor="address2">شقة، جناح، وما إلى ذلك</Label>
                   <Input id="address2" placeholder="Apt 4B" />
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
+                    <Label htmlFor="city">المدينة</Label>
                     <Input id="city" placeholder="New York" required />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="state">State / Province</Label>
-                    <Select>
-                      <SelectTrigger id="state">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ny">New York</SelectItem>
-                        <SelectItem value="ca">California</SelectItem>
-                        <SelectItem value="tx">Texas</SelectItem>
-                        <SelectItem value="fl">Florida</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="zip">ZIP / Postal Code</Label>
-                    <Input id="zip" placeholder="10001" required />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="country">Country</Label>
-                  <Select>
-                    <SelectTrigger id="country">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="us">United States</SelectItem>
-                      <SelectItem value="ca">Canada</SelectItem>
-                      <SelectItem value="uk">United Kingdom</SelectItem>
-                      <SelectItem value="au">Australia</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
@@ -172,12 +152,12 @@ export default function CheckoutPage() {
                       className="h-4 w-4 rounded border-gray-300"
                     />
                     <Label htmlFor="save-address">
-                      Save this address for future orders
+                      احفظ هذا العنوان للطلبات المستقبلية
                     </Label>
                   </div>
                 </div>
                 <Button type="submit" className="w-full" onClick={handleSubmit}>
-                  Place Order
+                  وضع الطلب
                 </Button>
               </form>
             </TabsContent>
