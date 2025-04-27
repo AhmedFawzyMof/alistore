@@ -9,13 +9,16 @@ import { toast } from "sonner";
 import { ProductCard } from "@/components/product-card";
 import { getProductDetails } from "./actions";
 import { tryCatch } from "@/lib/trycatch";
+import { useCartStore } from "@/stores/cartStores";
 
 export default function ProductPage({ params }: { params: any }) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [product, setProduct] = useState<any>({});
   const [relatedProducts, setRelatedProducts] = useState<any>([]);
+  const [inCart, setInCart] = useState(false);
+  const cartStore = useCartStore((state) => state);
 
   const { id } = use(params) as { id: string };
 
@@ -33,25 +36,71 @@ export default function ProductPage({ params }: { params: any }) {
     }
 
     fetchProductDetails();
+
+    const itemInCart = cartStore.productInCart(Number(id));
+
+    if (itemInCart) {
+      setQuantity(itemInCart.quantity);
+      setSelectedSize(itemInCart.size);
+      setSelectedColor(itemInCart.color);
+    }
+    setInCart(!!itemInCart);
   }, []);
 
-  const incrementQuantity = () => setQuantity(quantity + 1);
+  const incrementQuantity = () => {
+    if (quantity < 20) {
+      if (inCart) {
+        cartStore.incrementQuantity(Number(id));
+        setQuantity(cartStore.productInCart(Number(id))!.quantity);
+      }
+
+      setQuantity(quantity + 1);
+    }
+  };
   const decrementQuantity = () => {
     if (quantity > 1) {
+      if (inCart) {
+        cartStore.decrementQuantity(Number(id));
+      }
       setQuantity(quantity - 1);
     }
   };
 
   const addToCart = () => {
-    if (!selectedSize) {
-      toast.warning("Please select a size");
+    if (inCart) {
+      toast.error("Item already in cart");
       return;
     }
 
-    if (!selectedColor) {
-      toast.warning("Please select a color");
-      return;
+    if (product.sizes.length > 0) {
+      if (!selectedSize) {
+        toast.warning("Please select a size");
+        return;
+      }
     }
+
+    if (product.colors.length > 0) {
+      if (!selectedColor) {
+        toast.warning("Please select a color");
+        return;
+      }
+    }
+
+    cartStore.addToCart({
+      id: Number(id),
+      name: product.name,
+      image: product.image,
+      price: product.basePrice,
+      quantity: quantity,
+      size: selectedSize,
+      color: selectedColor,
+    });
+
+    setInCart(true);
+    const itemInCart = cartStore.productInCart(Number(id));
+    setQuantity(itemInCart!.quantity);
+    setSelectedSize(itemInCart!.size);
+    setSelectedColor(itemInCart!.color);
 
     toast.success("Added to cart", {
       description: `${quantity} × ${product.name} (${selectedSize}, ${selectedColor})`,
@@ -101,7 +150,7 @@ export default function ProductPage({ params }: { params: any }) {
                   <Button
                     key={size}
                     variant={selectedSize === size ? "default" : "outline"}
-                    className="w-12 h-12"
+                    className="w-12 h-12 uppercase"
                     onClick={() => setSelectedSize(size)}
                   >
                     {size}
@@ -126,6 +175,7 @@ export default function ProductPage({ params }: { params: any }) {
                     key={color}
                     variant={selectedColor === color ? "default" : "outline"}
                     onClick={() => setSelectedColor(color)}
+                    className="uppercase"
                   >
                     {color}
                   </Button>

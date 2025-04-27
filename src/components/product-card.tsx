@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Heart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 interface ProductCardProps {
   id: number;
@@ -21,10 +19,8 @@ export function ProductCard({
   image,
   category,
 }: ProductCardProps) {
-  const addToCart = () => {
-    toast.success("Added to cart", {
-      description: `${name} has been added to your cart`,
-    });
+  const goToProduct = () => {
+    window.location.href = `/products/${id}`;
   };
 
   return (
@@ -47,8 +43,8 @@ export function ProductCard({
           <p className="text-sm text-gray-500">{category}</p>
           <p className="font-medium text-gray-900">EGP {price.toFixed(2)}</p>
         </div>
-        <Button className="mt-4 w-full" size="sm" onClick={addToCart}>
-          أضف إلى السلة
+        <Button className="mt-4 w-full" size="sm" onClick={goToProduct}>
+          عرض تفاصيل المنتج
         </Button>
       </div>
     </div>

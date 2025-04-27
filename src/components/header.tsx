@@ -1,18 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, Search, ShoppingBag, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 import { useMobile } from "@/hooks/use-mobile";
+import { useCartStore } from "@/stores/cartStores";
 
 export function Header() {
   const isMobile = useMobile();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const cartStore = useCartStore((state) => state);
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      cartStore.setCart(JSON.parse(storedCart));
+    }
+
+    if (!storedCart) {
+      localStorage.setItem("cart", JSON.stringify([]));
+    }
+  }, []);
 
   return (
     <header
@@ -91,9 +105,14 @@ export function Header() {
               variant="ghost"
               size="icon"
               aria-label="Cart"
-              className="text-gray-600 hover:text-black hover:bg-gray-100"
+              className="relative text-gray-600 hover:text-black hover:bg-gray-100"
             >
               <ShoppingBag className="h-5 w-5" />
+              {cartStore.getTotalQuantity() > 0 && (
+                <Badge className="absolute top-0 -left-2 -z-30">
+                  {cartStore.getTotalQuantity()}
+                </Badge>
+              )}
               <span className="sr-only">عربة التسوق</span>
             </Button>
           </Link>

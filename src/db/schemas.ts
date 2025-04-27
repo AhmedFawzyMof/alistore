@@ -46,7 +46,6 @@ export const products = sqliteTable("products", {
 export const colors = sqliteTable("colors", {
   colorId: integer("color_id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull().unique(),
-  hexCode: text("hex_code").notNull(),
 });
 
 export const sizes = sqliteTable("sizes", {

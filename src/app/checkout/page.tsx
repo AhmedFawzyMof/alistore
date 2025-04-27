@@ -3,7 +3,7 @@
 import type React from "react";
 
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,35 +18,23 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { useCartStore } from "@/stores/cartStores";
+import { useEffect, useState } from "react";
 
 export default function CheckoutPage() {
-  const cartItems = [
-    {
-      id: "1",
-      name: "Classic White T-Shirt",
-      price: 29.99,
-      image: "/placeholder.svg?height=400&width=300",
-      size: "M",
-      color: "White",
-      quantity: 1,
-    },
-    {
-      id: "2",
-      name: "Slim Fit Jeans",
-      price: 59.99,
-      image: "/placeholder.svg?height=400&width=300",
-      size: "32",
-      color: "Blue",
-      quantity: 1,
-    },
-  ];
+  const cartStore = useCartStore((state) => state);
+  const [cartItems, setCartItems] = useState(cartStore.cart);
+  const [subTotal, setSubTotal] = useState(0);
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-  const shipping = 4.99;
-  const total = subtotal + shipping;
+  useEffect(() => {
+    setCartItems(cartStore.cart);
+    setSubTotal(
+      cartItems.reduce(
+        (total, item: any) => total + item.price * item.quantity,
+        0
+      )
+    );
+  }, [cartStore.cart, cartItems]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,13 +44,16 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="max-w-screen-2xl mx-auto container px-4 py-12 md:px-6 md:py-16">
+    <div
+      dir="rtl"
+      className="max-w-screen-2xl mx-auto container px-4 py-12 md:px-6 md:py-16"
+    >
       <Link
         href="/cart"
         className="inline-flex items-center gap-1 text-sm font-medium mb-8 hover:underline"
       >
-        <ChevronLeft className="h-4 w-4" />
-        Back to Cart
+        <ChevronRight className="h-4 w-4" />
+        العودة إلى سلة التسوق
       </Link>
 
       <h1 className="text-3xl font-bold tracking-tight mb-8">Checkout</h1>
@@ -194,7 +185,7 @@ export default function CheckoutPage() {
         <div>
           <div className="rounded-lg border shadow-sm">
             <div className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+              <h2 className="text-xl font-semibold mb-4">ملخص الطلب</h2>
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-4">
@@ -208,14 +199,14 @@ export default function CheckoutPage() {
                     <div className="flex-1">
                       <h3 className="font-medium text-sm">{item.name}</h3>
                       <div className="text-xs text-muted-foreground mt-1">
-                        <p>Size: {item.size}</p>
-                        <p>Color: {item.color}</p>
+                        <p>مقاس: {item.size}</p>
+                        <p>اللون: {item.color}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${item.price.toFixed(2)}</p>
+                      <p className="font-medium">{item.price.toFixed(2)}</p>
                       <p className="text-xs text-muted-foreground">
-                        Qty: {item.quantity}
+                        الكمية: {item.quantity}
                       </p>
                     </div>
                   </div>
@@ -224,17 +215,17 @@ export default function CheckoutPage() {
               <Separator className="my-4" />
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span className="text-muted-foreground">المجموع الفرعي</span>
+                  <span>EGP {subTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
+                  <span className="text-muted-foreground">شحن</span>
+                  <span>EGP {30}</span>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex justify-between font-medium text-lg">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>المجموع</span>
+                  <span>EGP {(subTotal + 30).toFixed(2)}</span>
                 </div>
               </div>
             </div>

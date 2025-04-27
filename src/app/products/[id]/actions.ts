@@ -1,7 +1,14 @@
 "use server";
 
 import { db } from "@/db";
-import { categories, products, productSizes, sizes } from "@/db/schemas";
+import {
+  categories,
+  colors,
+  productColors,
+  products,
+  productSizes,
+  sizes,
+} from "@/db/schemas";
 import { tryCatch } from "@/lib/trycatch";
 import { and, eq } from "drizzle-orm";
 
@@ -19,10 +26,13 @@ export async function getProductDetails(id: number) {
         isActive: products.isActive,
         categoryId: products.categoryId,
         size_name: sizes.name,
+        color_name: colors.name,
       })
       .from(products)
       .innerJoin(productSizes, eq(productSizes.productId, products.productId))
       .innerJoin(sizes, eq(sizes.sizeId, productSizes.sizeId))
+      .innerJoin(productColors, eq(productColors.productId, products.productId))
+      .innerJoin(colors, eq(colors.colorId, productColors.colorId))
       .where(eq(products.productId, id))
   );
 
@@ -45,12 +55,16 @@ export async function getProductDetails(id: number) {
         isActive: item.isActive,
         categoryId: item.categoryId,
         sizes: [item.size_name],
-        colors: [],
+        colors: [item.color_name],
       };
     }
 
     if (!product[item.id].sizes.includes(item.size_name)) {
       product[item.id].sizes.push(item.size_name);
+    }
+
+    if (!product[item.id].colors.includes(item.color_name)) {
+      product[item.id].colors.push(item.color_name);
     }
   });
 
