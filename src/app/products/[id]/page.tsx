@@ -11,11 +11,14 @@ import { getProductDetails } from "./actions";
 import { tryCatch } from "@/lib/trycatch";
 import { useCartStore } from "@/stores/cartStores";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ProductPage({ params }: { params: any }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [product, setProduct] = useState<any>({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [relatedProducts, setRelatedProducts] = useState<any>([]);
   const [inCart, setInCart] = useState(false);
   const cartStore = useCartStore((state) => state);
@@ -230,16 +233,24 @@ export default function ProductPage({ params }: { params: any }) {
         <div className="mt-16">
           <h2 className="text-2xl font-bold mb-8">قد يعجبك أيضاً</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {relatedProducts.map((product: any) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                price={product.basePrice}
-                image={product.image}
-                category={product.category}
-              />
-            ))}
+            {relatedProducts.map(
+              (product: {
+                id: number;
+                name: string;
+                basePrice: number;
+                image: string;
+                category: string;
+              }) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  price={product.basePrice}
+                  image={product.image}
+                  category={product.category}
+                />
+              )
+            )}
           </div>
         </div>
       )}

@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { useRouter, usePathname } from "next/navigation";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProductFilter({ data }: any) {
   const [priceRange, setPriceRange] = useState([0, data.highPrice]);
   const [options, setOptions] = useState({
@@ -88,12 +89,14 @@ export function ProductFilter({ data }: any) {
               <RadioGroupItem value="all" id="category-all" />
               <Label htmlFor="category-all">جميع الأقسام</Label>
             </div>
-            {data.categories_data.map((category: any) => (
-              <div key={category.id} className="flex items-center space-x-2">
-                <RadioGroupItem value={category.id} id={category.id} />
-                <Label htmlFor={category.id}>{category.name}</Label>
-              </div>
-            ))}
+            {data.categories_data.map(
+              (category: { id: string; name: string }) => (
+                <div key={category.id} className="flex items-center space-x-2">
+                  <RadioGroupItem value={category.id} id={category.id} />
+                  <Label htmlFor={category.id}>{category.name}</Label>
+                </div>
+              )
+            )}
           </RadioGroup>
         </CollapsibleContent>
       </Collapsible>
@@ -121,7 +124,7 @@ export function ProductFilter({ data }: any) {
               <RadioGroupItem value="all" id="size-all" />
               <Label htmlFor="size-all">جميع المقاسات</Label>
             </div>
-            {data.sizes_data.map((size: any) => (
+            {data.sizes_data.map((size: { id: string; name: string }) => (
               <div
                 key={size.id}
                 className="flex items-center space-x-2 uppercase"
@@ -157,7 +160,7 @@ export function ProductFilter({ data }: any) {
               <RadioGroupItem value="all" id="color-all" />
               <Label htmlFor="color-all">جميع الألوان</Label>
             </div>
-            {data.colors_data.map((color: any) => (
+            {data.colors_data.map((color: { id: string; name: string }) => (
               <div
                 key={color.id}
                 className="flex items-center space-x-2 uppercase"

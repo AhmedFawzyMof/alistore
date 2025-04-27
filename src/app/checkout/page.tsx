@@ -30,7 +30,8 @@ export default function CheckoutPage() {
     setCartItems(cartStore.cart);
     setSubTotal(
       cartItems.reduce(
-        (total, item: any) => total + item.price * item.quantity,
+        (total, item: { price: number; quantity: number }) =>
+          total + item.price * item.quantity,
         0
       )
     );

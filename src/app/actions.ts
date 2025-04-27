@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { categories, products } from "@/db/schemas";
 import { tryCatch } from "@/lib/trycatch";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export async function getCategories() {
   const { data, error } = await tryCatch(

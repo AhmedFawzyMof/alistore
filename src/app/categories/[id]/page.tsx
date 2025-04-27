@@ -1,7 +1,11 @@
 import { ProductCard } from "@/components/product-card";
 import { getProducts } from "./actions";
 
-export default async function CategoryProducts({ params }: { params: any }) {
+export default async function CategoryProducts({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id } = await params;
   const products = await getProducts(Number(id));
 

@@ -40,8 +40,10 @@ export async function getProductDetails(id: number) {
     throw new Error(error.message);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const product: Record<string, any> = {};
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data.forEach((item: any) => {
     if (!product[item.id]) {
       product[item.id] = {

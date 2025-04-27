@@ -29,6 +29,7 @@ export const useCartStore = create<CartStore>((set) => ({
     set({ cart: products });
   },
   productInCart: (id: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const item: any = useCartStore
       .getState()
       .cart.find((i: CartProduct) => i.id === id);

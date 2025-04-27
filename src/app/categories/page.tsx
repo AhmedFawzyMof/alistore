@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { CategoryCard } from "@/components/category-card";
 import { getCategories } from "../actions";
 

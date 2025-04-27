@@ -3,8 +3,11 @@ import { ProductFilter } from "@/components/product-filter";
 import { Pagination } from "@/components/pagination";
 import { filterData, getProducts } from "./actions";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function ProductsPage({ searchParams }: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const filter: any = await filterData();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const products: any = await getProducts(await searchParams);
 
   return (
