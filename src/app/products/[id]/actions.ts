@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/db";
+import db from "@/db";
 import {
   categories,
   colors,
@@ -16,23 +16,24 @@ export async function getProductDetails(id: number) {
   const { data, error } = await tryCatch(
     db
       .select({
-        id: products.productId,
+        productId: products.productId,
         name: products.name,
         image: products.image,
         basePrice: products.basePrice,
-        category: products.categoryId,
+        category: categories.name,
         description: products.description,
         shortDiscription: products.shortDiscription,
         isActive: products.isActive,
-        categoryId: products.categoryId,
-        size_name: sizes.name,
-        color_name: colors.name,
+        categoryId: categories.categoryId,
+        sizeName: sizes.name,
+        colorName: colors.name,
       })
       .from(products)
       .innerJoin(productSizes, eq(productSizes.productId, products.productId))
       .innerJoin(sizes, eq(sizes.sizeId, productSizes.sizeId))
       .innerJoin(productColors, eq(productColors.productId, products.productId))
       .innerJoin(colors, eq(colors.colorId, productColors.colorId))
+      .innerJoin(categories, eq(categories.categoryId, products.categoryId))
       .where(eq(products.productId, id))
   );
 
@@ -40,61 +41,63 @@ export async function getProductDetails(id: number) {
     throw new Error(error.message);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const product: Record<string, any> = {};
+  if (!data || data.length === 0) {
+    return { error: "Product not found" };
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data.forEach((item: any) => {
-    if (!product[item.id]) {
-      product[item.id] = {
-        id: item.id,
-        name: item.name,
-        image: item.image,
-        basePrice: item.basePrice,
-        category: item.category,
-        description: item.description,
-        shortDiscription: item.shortDiscription,
-        isActive: item.isActive,
-        categoryId: item.categoryId,
-        sizes: [item.size_name],
-        colors: [item.color_name],
-      };
+  const product = {
+    id: data[0].productId,
+    name: data[0].name,
+    image: data[0].image,
+    basePrice: data[0].basePrice,
+    category: data[0].category,
+    description: data[0].description,
+    shortDiscription: data[0].shortDiscription,
+    isActive: data[0].isActive,
+    categoryId: data[0].categoryId,
+    sizes: [] as string[],
+    colors: [] as string[],
+  };
+
+  const sizesSet = new Set<string>();
+  const colorsSet = new Set<string>();
+
+  data.forEach((item) => {
+    if (item.sizeName) {
+      sizesSet.add(item.sizeName);
     }
-
-    if (!product[item.id].sizes.includes(item.size_name)) {
-      product[item.id].sizes.push(item.size_name);
-    }
-
-    if (!product[item.id].colors.includes(item.color_name)) {
-      product[item.id].colors.push(item.color_name);
+    if (item.colorName) {
+      colorsSet.add(item.colorName);
     }
   });
 
-  const { data: related_products, error: related_products_error } =
-    await tryCatch(
-      db
-        .select({
-          id: products.productId,
-          name: products.name,
-          image: products.image,
-          basePrice: products.basePrice,
-          category: categories.name,
-        })
-        .from(products)
-        .innerJoin(categories, eq(categories.categoryId, products.categoryId))
-        .where(
-          and(
-            eq(products.isActive, true),
-            eq(products.categoryId, product[id].categoryId)
-          )
-        )
-        .orderBy(products.createdAt)
-        .limit(4)
-    );
+  product.sizes = Array.from(sizesSet);
+  product.colors = Array.from(colorsSet);
 
-  if (related_products_error) {
-    return { error: related_products_error.message };
+  const { data: relatedProducts, error: relatedProductsError } = await tryCatch(
+    db
+      .select({
+        id: products.productId,
+        name: products.name,
+        image: products.image,
+        basePrice: products.basePrice,
+        category: categories.name,
+      })
+      .from(products)
+      .innerJoin(categories, eq(categories.categoryId, products.categoryId))
+      .where(
+        and(
+          eq(products.isActive, true),
+          eq(products.categoryId, product.categoryId)
+        )
+      )
+      .orderBy(products.createdAt)
+      .limit(4)
+  );
+
+  if (relatedProductsError) {
+    return { error: relatedProductsError.message };
   }
 
-  return { related_products: related_products, product: product[id] };
+  return { related_products: relatedProducts, product };
 }

@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import db from "@/db";
 import { categories, products } from "@/db/schemas";
 import { tryCatch } from "@/lib/trycatch";
 import { eq, and } from "drizzle-orm";

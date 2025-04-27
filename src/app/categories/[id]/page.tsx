@@ -3,7 +3,7 @@ import { getProducts } from "./actions";
 
 export default async function CategoryProducts({ params }: { params: any }) {
   const { id } = await params;
-  const products = await getProducts(Number(id));
+  const products: any = await getProducts(Number(id));
 
   return (
     <div
@@ -14,7 +14,7 @@ export default async function CategoryProducts({ params }: { params: any }) {
       {products.data?.length === 0 && <p>لا يوجد منتجات</p>}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">
         {products.error && <p>حدث خطأ ما، يرجى المحاولة مرة أخرى</p>}
-        {products.data?.map((product) => (
+        {products.data?.map((product: any) => (
           <ProductCard
             key={product.id}
             id={product.id}
